@@ -9,20 +9,17 @@ pipeline {
     stages {
 
         stage('Checkout') {
-            steps { checkout scm
-}
-        }
-
-      
-        stage('Terraform Init') {
             steps {
-                 {
-                    sh 'terraform init -input=false'
-                }
+                checkout scm
             }
         }
 
-        
+        stage('Terraform Init') {
+            steps {
+                sh 'terraform init -input=false'
+            }
+        }
+
         stage('Terraform Validate') {
             steps {
                 sh 'terraform validate'
@@ -31,9 +28,7 @@ pipeline {
 
         stage('Terraform Plan') {
             steps {
-                 {
-                    sh 'terraform plan -input=false -var-file=terraform.tfvars -out=tfplan'
-                }
+                sh 'terraform plan -input=false -var-file=terraform.tfvars -out=tfplan'
             }
         }
 
@@ -46,22 +41,19 @@ pipeline {
 
         stage('Terraform Apply') {
             steps {
-                 {
-                    sh 'terraform apply -input=false -auto-approve tfplan'
-                }
+                sh 'terraform apply -input=false -auto-approve tfplan'
             }
         }
 
         stage('Terraform Output') {
             steps {
-                 {
-                    sh 'terraform output'
-                }
+                sh 'terraform output'
             }
         }
     }
 
     post {
+
         success {
             echo 'Terraform deployment completed successfully.'
         }
@@ -70,4 +62,4 @@ pipeline {
             echo 'Terraform deployment failed.'
         }
     }
-} 
+}
