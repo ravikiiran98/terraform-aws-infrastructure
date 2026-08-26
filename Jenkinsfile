@@ -16,13 +16,7 @@ pipeline {
       
         stage('Terraform Init') {
             steps {
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'aws-terraform',
-                        usernameVariable: 'AWS_ACCESS_KEY_ID',
-                        passwordVariable: 'AWS_SECRET_ACCESS_KEY'
-                    )
-                ]) {
+                 {
                     sh 'terraform init -input=false'
                 }
             }
@@ -37,13 +31,7 @@ pipeline {
 
         stage('Terraform Plan') {
             steps {
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'aws-terraform',
-                        usernameVariable: 'AWS_ACCESS_KEY_ID',
-                        passwordVariable: 'AWS_SECRET_ACCESS_KEY'
-                    )
-                ]) {
+                 {
                     sh 'terraform plan -input=false -var-file=terraform.tfvars -out=tfplan'
                 }
             }
@@ -58,13 +46,7 @@ pipeline {
 
         stage('Terraform Apply') {
             steps {
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'aws-terraform',
-                        usernameVariable: 'AWS_ACCESS_KEY_ID',
-                        passwordVariable: 'AWS_SECRET_ACCESS_KEY'
-                    )
-                ]) {
+                 {
                     sh 'terraform apply -input=false -auto-approve tfplan'
                 }
             }
@@ -72,13 +54,7 @@ pipeline {
 
         stage('Terraform Output') {
             steps {
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'aws-terraform',
-                        usernameVariable: 'AWS_ACCESS_KEY_ID',
-                        passwordVariable: 'AWS_SECRET_ACCESS_KEY'
-                    )
-                ]) {
+                 {
                     sh 'terraform output'
                 }
             }
