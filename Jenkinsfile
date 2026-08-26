@@ -9,8 +9,8 @@ pipeline {
     stages {
 
         stage('Checkout') {
-            steps {
-                checkout "https://github.com/ravikiiran98/terraform-aws-infrastructure.git"            }
+            steps { checkout scm
+}
         }
 
         stage('Terraform Version') {
