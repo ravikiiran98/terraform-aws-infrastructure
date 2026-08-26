@@ -108,7 +108,7 @@ resource "aws_instance" "web" {
 
   associate_public_ip_address = true
 
- 
+
   tags = {
     Name = "terraform-${var.environment}-web"
   }
