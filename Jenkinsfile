@@ -13,12 +13,7 @@ pipeline {
 }
         }
 
-        stage('Terraform Version') {
-            steps {
-                sh 'terraform version'
-            }
-        }
-
+      
         stage('Terraform Init') {
             steps {
                 withCredentials([
@@ -28,10 +23,11 @@ pipeline {
                         passwordVariable: 'AWS_SECRET_ACCESS_KEY'
                     )
                 ]) {
-                    sh 'terraform init'
+                    sh 'terraform init -input=false'
                 }
             }
         }
+
         stage('Terraform Format Check') {
             steps {
                 sh 'terraform fmt -check'
@@ -46,7 +42,15 @@ pipeline {
 
         stage('Terraform Plan') {
             steps {
-                sh 'terraform plan -out=tfplan'
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'aws-terraform',
+                        usernameVariable: 'AWS_ACCESS_KEY_ID',
+                        passwordVariable: 'AWS_SECRET_ACCESS_KEY'
+                    )
+                ]) {
+                    sh 'terraform plan -input=false -out=tfplan'
+                }
             }
         }
 
@@ -59,13 +63,29 @@ pipeline {
 
         stage('Terraform Apply') {
             steps {
-                sh 'terraform apply -auto-approve tfplan'
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'aws-terraform',
+                        usernameVariable: 'AWS_ACCESS_KEY_ID',
+                        passwordVariable: 'AWS_SECRET_ACCESS_KEY'
+                    )
+                ]) {
+                    sh 'terraform apply -input=false -auto-approve tfplan'
+                }
             }
         }
 
         stage('Terraform Output') {
             steps {
-                sh 'terraform output'
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'aws-terraform',
+                        usernameVariable: 'AWS_ACCESS_KEY_ID',
+                        passwordVariable: 'AWS_SECRET_ACCESS_KEY'
+                    )
+                ]) {
+                    sh 'terraform output'
+                }
             }
         }
     }
@@ -79,4 +99,4 @@ pipeline {
             echo 'Terraform deployment failed.'
         }
     }
-}
+} 
