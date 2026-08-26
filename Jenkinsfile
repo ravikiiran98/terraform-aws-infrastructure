@@ -49,7 +49,7 @@ pipeline {
                         passwordVariable: 'AWS_SECRET_ACCESS_KEY'
                     )
                 ]) {
-                    sh 'terraform plan -input=false -out=tfplan'
+                    sh 'terraform plan -input=false -var-file=terraform.tfvars -out=tfplan'
                 }
             }
         }
